@@ -54,8 +54,6 @@ function wc_cus_save_profile_pic($picture_id, $user_id){
  *
  */
 function wc_cus_upload_picture( $foto ) {
-	// WordPress environment
-	require( dirname(__FILE__) . '/../../../wp-load.php' );
 
 	$wordpress_upload_dir = wp_upload_dir();
 	// $wordpress_upload_dir['path'] is the full server path to wp-content/uploads/2017/05, for multisite works good as well
@@ -69,18 +67,18 @@ function wc_cus_upload_picture( $foto ) {
 	$log = new WC_Logger();		
 	
 	if( empty( $profilepicture ) )
-	$log->add('aaa','File is not selected.');	
+	$log->add('custom_profile_picture','File is not selected.');	
 
 	if( $profilepicture['error'] )
-	$log->add('aaa',$profilepicture['error']);	
+	$log->add('custom_profile_picture',$profilepicture['error']);	
 	
 
 	if( $profilepicture['size'] > wp_max_upload_size() )
-	$log->add('aaa','It is too large than expected.');	
+	$log->add('custom_profile_picture','It is too large than expected.');	
 	
 
-	if( !in_array( $new_file_mime, get_allowed_mime_types() ) )
-	$log->add('aaa','WordPress doesn\'t allow this type of uploads.' );		
+	if( !in_array( $new_file_mime, get_allowed_mime_types() ))
+	$log->add('custom_profile_picture','WordPress doesn\'t allow this type of uploads.' );		
 
 	while( file_exists( $new_file_path ) ) {
 	$i++;
@@ -100,7 +98,7 @@ function wc_cus_upload_picture( $foto ) {
 	), $new_file_path );
 
 	// wp_generate_attachment_metadata() won't work if you do not include this file
-	require_once( ABSPATH . 'wp-admin/includes/image.php' );
+	require_once( admin_url() . 'includes/image.php' );
 
 	// Generate and save the attachment metas into the database
 	wp_update_attachment_metadata( $upload_id, wp_generate_attachment_metadata( $upload_id, $new_file_path ) );
